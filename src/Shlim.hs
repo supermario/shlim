@@ -1,9 +1,10 @@
+module Shlim where
+
 import Data.Char
 
 main = do
   contents <- getContents
   putStr (compile contents)
-
 
 compile :: String -> String
 compile = unlines . map parse . lines
