@@ -5,6 +5,9 @@ import Shlim
 
 spec :: Spec
 spec = do
-  describe "tag" $ do
+  describe "parseLine" $ do
     it "wraps tags" $ do
-      tag ["div", "test"] `shouldBe` "<div>test</div>"
+      parseLine ["div", "content"] `shouldBe` "<div>content</div>"
+
+    it "wraps tags" $ do
+      parseLine ["div.test", "content"] `shouldBe` "<div class='test'>content</div>"

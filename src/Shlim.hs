@@ -1,16 +1,25 @@
 module Shlim where
 
-import Data.Char
+import Data.List.Split
 
 main = do
   contents <- getContents
-  putStr (compile contents)
+  putStr (parseLines contents)
 
-compile :: String -> String
-compile = unlines . map parse . lines
+parseLines :: String -> String
+parseLines = unlines . map (parseLine . words) . lines
 
-parse :: String -> String
-parse = tag . words
+parseLine :: [String] -> String
+parseLine (x:xs) = concat ["<", open, ">", unwords xs, "</", close, ">"]
+  where
+      parts = tagParts $ x
+      (close:_) = parts
+      open = concat . (map tag) $ parts
 
-tag :: [String] -> String
-tag (x:xs) = concat ["<", x, ">", unwords xs, "</", x, ">"]
+tagParts :: String -> [String]
+tagParts = split (keepDelimsL $ oneOf ".")
+
+tag :: String -> String
+tag ('.':xs) = " class='" ++ xs ++ "'"
+tag ""       = "div"
+tag x        = x
