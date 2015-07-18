@@ -7,14 +7,17 @@ main = do
   putStr (parseLines contents)
 
 parseLines :: String -> String
-parseLines = unlines . map (parseLine . words) . lines
+parseLines = unlines . map (parseLine) . lines
 
-parseLine :: [String] -> String
-parseLine (x:xs) = concat ["<", unwords $ el:attr, ">", unwords xs, "</", el, ">"]
-  where (el:attr) = (map tag) $ tagParts $ x
+parseLine :: String -> String
+parseLine = parse . words
+
+parse :: [String] -> String
+parse (x:xs) = concat ["<", unwords $ el:attr, ">", unwords xs, "</", el, ">"]
+  where (el:attr) = tagParts x
 
 tagParts :: String -> [String]
-tagParts = split (keepDelimsL $ oneOf ".#")
+tagParts = (map tag) . split (keepDelimsL $ oneOf ".#")
 
 tag :: String -> String
 tag ('.':xs) = "class='" ++ xs ++ "'"
